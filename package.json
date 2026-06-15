@@ -1,0 +1,27 @@
+{
+  "name": "aqa-cypress",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
+    "cypress:run:chrome": "cypress run --browser chrome",
+    "cypress:run:headed": "cypress run --browser chrome --headed"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/edyankov/aqa-cypress.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/edyankov/aqa-cypress/issues"
+  },
+  "homepage": "https://github.com/edyankov/aqa-cypress#readme",
+  "devDependencies": {
+    "cypress": "^15.17.0"
+  }
+}
