@@ -18,13 +18,6 @@ Cypress.Commands.add('getEnv', (keys) => {
     return cy.wrap(result, { log: false });
 });
 
-// ─── Cypress.expose — custom implementation ──────────────────────────────────
-// Cypress does not provide expose() by default.
-// Implement it as an alias for Cypress.env(),
-// simply returning the value associated with the given key.
-// Enables syntax such as: Cypress.expose('basicAuth')
-Cypress.expose = (key) => Cypress.env(key);
-
 // ─── Custom login() command (Task 4) ─────────────────────────────────────────
 // Login via UI using XPath to locate the Sign In button
 Cypress.Commands.add('login', (username, password) => {
@@ -43,7 +36,7 @@ Cypress.Commands.add('login', (username, password) => {
 // ─── Overwrite visit — always pass basicAuth ─────────────────────────────────
 Cypress.Commands.overwrite('visit', (originalFn, url, options) => {
     return originalFn(url, {
-        auth: Cypress.expose('basicAuth'),
+        auth: Cypress.env('basicAuth'),
         ...options,
     });
 });
