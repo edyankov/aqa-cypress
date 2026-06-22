@@ -9,17 +9,24 @@ module.exports = defineConfig({
     viewportHeight: 720,
     viewportWidth: 1080,
 
-    // mochawesome reporter (task requirement — configured in the main config)
     reporter: 'mochawesome',
     reporterOptions: {
-        reportDir: 'cypress/reports',
+        reportDir: 'cypress/reports/qauto2',
         overwrite: false,
         html: false,
         json: true,
     },
 
+    // QAuto2 user credentials (requirement #3 — store login credentials in the config)
+    env: {
+        userCreds: {
+            username: 'aqa_hillel_qauto2@gmail.com',
+            password: 'Qwerty12345',
+        },
+    },
+
     e2e: {
-        baseUrl: 'https://qauto.forstudy.space',
+        baseUrl: 'https://qauto2.forstudy.space',
         specPattern: 'cypress/e2e/**/*.test.js',
         setupNodeEvents(on, config) {
             on('task', {
