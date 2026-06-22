@@ -1,7 +1,6 @@
 const { defineConfig } = require('cypress');
 
 module.exports = defineConfig({
-    allowCypressEnv: true,
     retries: {
         runMode: 1,
         openMode: 0,
@@ -9,17 +8,6 @@ module.exports = defineConfig({
     video: true,
     viewportHeight: 720,
     viewportWidth: 1080,
-
-    env: {
-        basicAuth: {
-            username: 'guest',
-            password: 'welcome2qauto',
-        },
-        defaultUserCreds: {
-            username: 'aqac_user@example.com',
-            password: 'Qwerty12345',
-        },
-    },
 
     e2e: {
         baseUrl: 'https://qauto.forstudy.space',

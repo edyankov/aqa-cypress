@@ -2,65 +2,45 @@
 // Custom commands and overwrites
 // ***********************************************
 
-// Import the cypress-xpath plugin — adds the cy.xpath() command
 import 'cypress-xpath';
 
-// ─── cy.env([...]) — custom command ──────────────────────────────────────────
-// Accepts an array of keys and returns an object containing
-// the corresponding values from Cypress.env().
-// Enables syntax such as:
-// cy.env(['defaultUserCreds']).then(({ defaultUserCreds }) => {...})
-Cypress.Commands.add('getEnv', (keys) => {
-    const result = {};
-    keys.forEach((key) => {
-        result[key] = Cypress.env(key);
+// Basic auth credentials are stored in cypress/fixtures/basicAuth.json.
+// Load them once before the spec runs so the visit overwrite can use them synchronously.
+let basicAuth;
+
+before(() => {
+    cy.fixture('basicAuth').then((creds) => {
+        basicAuth = creds;
     });
-    return cy.wrap(result, { log: false });
 });
 
-// ─── Custom login() command (Task 4) ─────────────────────────────────────────
-// Login via UI using XPath to locate the Sign In button
+// Custom login() command — logs in via UI (uses xpath for the Sign In button)
 Cypress.Commands.add('login', (username, password) => {
     cy.xpath("//button[contains(text(), 'Sign In')]").click();
-
     cy.get('[class="modal-content"]').within(() => {
         cy.get('input[id="signinEmail"]').type(username);
         cy.get('input[id="signinPassword"]').type(password, { sensitive: true });
-
-        cy.contains('button', 'Login')
-            .should('be.enabled')
-            .click();
+        cy.contains('button', 'Login').should('be.enabled').click();
     });
 });
 
-// ─── Overwrite visit — always pass basicAuth ─────────────────────────────────
+// Overwrite visit — always pass basicAuth loaded from the fixture
 Cypress.Commands.overwrite('visit', (originalFn, url, options) => {
     return originalFn(url, {
-        auth: Cypress.env('basicAuth'),
+        auth: basicAuth,
         ...options,
     });
 });
 
-// ─── Overwrite type — mask passwords in logs (Task 5) ───────────────────────
+// Overwrite type — mask password values in Cypress logs
 Cypress.Commands.overwrite('type', (originalFn, element, text, options) => {
     if (options && options.sensitive) {
-        // Disable the default log
         options.log = false;
-
-        // Create a custom log with masked text
         Cypress.log({
             $el: element,
             name: 'type',
             message: '*'.repeat(text.length),
         });
     }
-
     return originalFn(element, text, options);
-});
-
-// ─── Custom query: getByClassName ────────────────────────────────────────────
-Cypress.Commands.addQuery('getByClassName', function getByClassName(name) {
-    return () => {
-        return Cypress.$(`[class*="${name}"]`);
-    };
 });
