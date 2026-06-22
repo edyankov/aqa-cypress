@@ -8,7 +8,13 @@
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
     "cypress:run:chrome": "cypress run --browser chrome",
-    "cypress:run:headed": "cypress run --browser chrome --headed"
+    "cypress:run:headed": "cypress run --browser chrome --headed",
+    "cypress:run:qauto": "cypress run --config-file cypress.config.qauto.js",
+    "cypress:run:qauto2": "cypress run --config-file cypress.config.qauto2.js",
+    "cypress:open:qauto": "cypress open --config-file cypress.config.qauto.js",
+    "cypress:open:qauto2": "cypress open --config-file cypress.config.qauto2.js",
+    "report:merge": "mochawesome-merge \"cypress/reports/**/*.json\" > cypress/reports/output.json",
+    "report:generate": "npx marge cypress/reports/output.json --reportDir cypress/reports/html"
   },
   "repository": {
     "type": "git",
@@ -23,6 +29,9 @@
   "homepage": "https://github.com/edyankov/aqa-cypress#readme",
   "devDependencies": {
     "cypress": "^15.17.0",
-    "cypress-xpath": "^2.0.1"
+    "cypress-xpath": "^2.0.1",
+    "mochawesome": "^7.1.4",
+    "mochawesome-merge": "^5.1.1",
+    "mochawesome-report-generator": "^6.3.2"
   }
 }

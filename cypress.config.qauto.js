@@ -9,13 +9,20 @@ module.exports = defineConfig({
     viewportHeight: 720,
     viewportWidth: 1080,
 
-    // mochawesome reporter (task requirement — configured in the main config)
     reporter: 'mochawesome',
     reporterOptions: {
-        reportDir: 'cypress/reports',
+        reportDir: 'cypress/reports/qauto',
         overwrite: false,
         html: false,
         json: true,
+    },
+
+    // User credentials for QAuto (requirement #3 — usernames/passwords stored in config)
+    env: {
+        userCreds: {
+            username: 'aqa_hillel_qauto@gmail.com',
+            password: 'Qwerty12345',
+        },
     },
 
     e2e: {
