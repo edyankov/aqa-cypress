@@ -7,3 +7,9 @@
 // commands please read more here:
 // https://on.cypress.io/custom-commands
 // ***********************************************
+Cypress.Commands.overwrite('visit', (originalFn, url, options) => {
+    return originalFn(url, {
+        auth: Cypress.env('basicAuth'),
+        ...options,
+    });
+});
