@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/edyankov/aqa-cypress#readme",
   "devDependencies": {
-    "cypress": "^15.17.0"
+    "cypress": "^15.17.0",
+    "cypress-xpath": "^2.0.1"
   }
 }

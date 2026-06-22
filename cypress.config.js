@@ -15,6 +15,10 @@ module.exports = defineConfig({
             username: 'guest',
             password: 'welcome2qauto',
         },
+        defaultUserCreds: {
+            username: 'aqac_user@example.com',
+            password: 'Qwerty12345',
+        },
     },
 
     e2e: {
