@@ -282,10 +282,10 @@ describe('Registration form - Successful registration', () => {
 // ─── Custom login() command (task 4) ────────────────────────────────────────────
 
 describe('Custom login() command', () => {
-    it('logs in via UI using custom login() with defaultUserCreds', () => {
-        cy.visit('/');
-        cy.getEnv(['defaultUserCreds']).then(({ defaultUserCreds }) => {
-            cy.login(defaultUserCreds.username, defaultUserCreds.password);
+    it('logs in via UI using credentials from the userCreds fixture', () => {
+        cy.fixture('userCreds').then(({ username, password }) => {
+            cy.visit('/');
+            cy.login(username, password);
         });
         cy.url().should('eq', GARAGE_URL);
     });
