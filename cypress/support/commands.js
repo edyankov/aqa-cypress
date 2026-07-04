@@ -44,3 +44,35 @@ Cypress.Commands.overwrite('type', (originalFn, element, text, options) => {
     }
     return originalFn(element, text, options);
 });
+
+// ***********************************************
+// API custom commands (HW 22.1)
+// ***********************************************
+
+const API_AUTH = { username: 'guest', password: 'welcome2qauto' };
+
+// Get the list of created cars via API (task requirement #3)
+Cypress.Commands.add('getCarsApi', () => {
+    return cy.request({
+        method: 'GET',
+        url: '/api/cars',
+        auth: API_AUTH,
+    });
+});
+
+// Create an expense for a given car via API (task requirement #4)
+Cypress.Commands.add('createExpenseApi', (carId, expenseData) => {
+    return cy.request({
+        method: 'POST',
+        url: '/api/expenses',
+        auth: API_AUTH,
+        body: {
+            carId,
+            reportedAt: expenseData.reportedAt,
+            mileage: expenseData.mileage,
+            liters: expenseData.liters,
+            totalCost: expenseData.totalCost,
+            forceMileage: false,
+        },
+    });
+});
