@@ -1,22 +1,12 @@
 const { defineConfig } = require('cypress');
+const { baseConfig } = require('./config.base');
 
 module.exports = defineConfig({
-    retries: {
-        runMode: 1,
-        openMode: 0,
-    },
-    video: true,
-    viewportHeight: 720,
-    viewportWidth: 1080,
-
-    reporter: 'mochawesome',
+    ...baseConfig,
     reporterOptions: {
+        ...baseConfig.reporterOptions,
         reportDir: 'cypress/reports/qauto2',
-        overwrite: false,
-        html: false,
-        json: true,
     },
-
     // QAuto2 user credentials (requirement #3 — store login credentials in the config)
     env: {
         userCreds: {
@@ -24,17 +14,11 @@ module.exports = defineConfig({
             password: 'Qwerty12345',
         },
     },
-
     e2e: {
+        ...baseConfig.e2e,
         baseUrl: 'https://qauto2.forstudy.space',
-        specPattern: 'cypress/e2e/**/*.test.js',
-        setupNodeEvents(on, config) {
-            on('task', {
-                log(message) {
-                    console.log(message);
-                    return null;
-                },
-            });
-        },
+        // registration (HW 20) and queries (HW 19) are qauto-only specs.
+        // Only the garage/expenses spec (HW 21) is meant to run against qauto2.
+        excludeSpecPattern: ['**/registration.test.js', '**/queries.test.js'],
     },
 });

@@ -1,33 +1,10 @@
 const { defineConfig } = require('cypress');
+const { baseConfig } = require('./config.base');
 
 module.exports = defineConfig({
-    retries: {
-        runMode: 1,
-        openMode: 0,
-    },
-    video: true,
-    viewportHeight: 720,
-    viewportWidth: 1080,
-
-    // mochawesome reporter (task requirement — configured in the main config)
-    reporter: 'mochawesome',
-    reporterOptions: {
-        reportDir: 'cypress/reports',
-        overwrite: false,
-        html: false,
-        json: true,
-    },
-
+    ...baseConfig,
     e2e: {
+        ...baseConfig.e2e,
         baseUrl: 'https://qauto.forstudy.space',
-        specPattern: 'cypress/e2e/**/*.test.js',
-        setupNodeEvents(on, config) {
-            on('task', {
-                log(message) {
-                    console.log(message);
-                    return null;
-                },
-            });
-        },
     },
 });
