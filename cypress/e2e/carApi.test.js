@@ -4,6 +4,10 @@ import { GaragePage } from '../support/pages/garagePage';
 
 const garagePage = new GaragePage();
 
+// Expense date must not be earlier than the car creation date, and the car is
+// created during the test run — so always report it for today (UTC, as the API uses GMT).
+const today = () => new Date().toISOString().split('T')[0];
+
 describe('Car creation & Expense - API and UI', () => {
     // Test data used both for UI creation and API validation
     const carData = {
@@ -16,7 +20,7 @@ describe('Car creation & Expense - API and UI', () => {
     // Expense mileage must be >= car mileage and unique among today's expenses,
     // so we make it unique per run to avoid the "mileage must not be equal" 400 error
     const expenseData = {
-        reportedAt: '2026-07-04',
+        reportedAt: today(),
         mileage: 200 + (Date.now() % 100000),
         liters: 20,
         totalCost: 1000,

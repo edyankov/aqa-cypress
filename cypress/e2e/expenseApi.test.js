@@ -4,11 +4,15 @@ import { GaragePage } from '../support/pages/garagePage';
 
 const garagePage = new GaragePage();
 
+// Expense date must not be earlier than the car creation date, and the car is
+// created during the test run — so always report it for today (UTC, as the API uses GMT).
+const today = () => new Date().toISOString().split('T')[0];
+
 describe('Create expense via API', () => {
     const carData = { brand: 'Audi', model: 'TT', mileage: '100' };
 
     const expenseData = {
-        reportedAt: '2026-07-04',
+        reportedAt: today(),
         mileage: 200 + (Date.now() % 100000),
         liters: 20,
         totalCost: 1000,
