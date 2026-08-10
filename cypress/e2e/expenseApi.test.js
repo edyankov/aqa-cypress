@@ -1,14 +1,19 @@
 /// <reference types="cypress" />
 
-import { GaragePage } from '../support/pages/garagePage';
+// Basic auth for API requests (the site is behind guest / welcome2qauto).
+// cy.request does NOT go through the visit overwrite, so we pass auth explicitly.
+const API_AUTH = { username: 'guest', password: 'welcome2qauto' };
 
-const garagePage = new GaragePage();
+// Audi TT — ids come from GET /api/cars/brands and GET /api/cars/models
+const CAR_PAYLOAD = { carBrandId: 1, carModelId: 1, mileage: 100 };
+
+// Expense date must not be earlier than the car creation date, and the car is
+// created during the test run — so always report it for today (UTC, the API uses GMT).
+const today = () => new Date().toISOString().split('T')[0];
 
 describe('Create expense via API', () => {
-    const carData = { brand: 'Audi', model: 'TT', mileage: '100' };
-
     const expenseData = {
-        reportedAt: '2026-07-04',
+        reportedAt: today(),
         mileage: 200 + (Date.now() % 100000),
         liters: 20,
         totalCost: 1000,
@@ -22,10 +27,18 @@ describe('Create expense via API', () => {
         cy.login(username, password);
         cy.url().should('include', '/panel/garage');
 
-        // Prepare a car (via UI) and capture its id from the interception
-        cy.intercept('POST', '/api/cars').as('createCar');
-        garagePage.addCar(carData.brand, carData.model, carData.mileage);
-        cy.wait('@createCar').then(({ response }) => {
+        // Prepare a car via API. This spec is about the expense endpoint, so the car
+        // is just a fixture — creating it through the UI only adds flakiness.
+        cy.request({
+            method: 'POST',
+            url: '/api/cars',
+            auth: API_AUTH,
+            body: CAR_PAYLOAD,
+            failOnStatusCode: false,
+        }).then((response) => {
+            // The body goes into the assertion message, so a server-side rejection
+            // shows its actual reason instead of a bare "undefined" error.
+            expect(response.status, JSON.stringify(response.body)).to.eq(201);
             createdCarId = response.body.data.id;
         });
     });
