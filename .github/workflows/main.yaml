@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  cypress-docker:
+    name: Cypress tests in Docker
+    runs-on: ubuntu-latest
+
+    # The whole job runs INSIDE this docker image — it already ships
+    # Chrome / Firefox / Edge, so no browser installation step is needed.
+    container:
+      image: cypress/browsers:node-20.9.0-chrome-118.0.5993.88-1-ff-118.0.2-edge-118.0.2088.46-1
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Show environment
+        run: |
+          node --version
+          npm --version
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Show Cypress version
+        run: npx cypress --version
+
+      - name: Run Cypress tests in Chrome
+        run: npx cypress run --browser chrome --config-file cypress.config.qauto.js
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-artifacts
+          path: |
+            cypress/screenshots
+            cypress/videos
+            cypress/reports
+          retention-days: 7
+          if-no-files-found: ignore
